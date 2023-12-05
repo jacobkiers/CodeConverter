@@ -557,6 +557,27 @@ public partial class GenericComparison
     }
 
     [Fact]
+    public async Task GenericIsNothingComparisonAsync()
+    {
+        await TestConversionVisualBasicToCSharpAsync(@"Public Class GenericComparison
+    Public Sub m(Of T)(p As T)
+        If IsNothing(p) Then Return
+        If Not IsNothing(p) Then Return
+    End Sub
+End Class", @"
+public partial class GenericComparison
+{
+    public void m<T>(T p)
+    {
+        if (p == null)
+            return;
+        if (!(p == null))
+            return;
+    }
+}");
+    }
+
+    [Fact]
     public async Task AccessSharedThroughInstanceAsync()
     {
         await TestConversionVisualBasicToCSharpAsync(@"Public Class A
@@ -1092,7 +1113,7 @@ internal partial class TestClass
 }");
     }
 
-        
+
     [Fact]
     public async Task ExternalReferenceToOutParameterFromInterfaceImplementationAsync()
     {
